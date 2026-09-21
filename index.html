@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b8f55">
+<title>Lôgô — Marketplace</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f5f7f6;color:#17221c}
+header{background:#0b8f55;color:#fff;padding:18px 16px;position:sticky;top:0;z-index:5}
+.logo{font-size:28px;font-weight:800}.tag{font-size:12px;opacity:.9}
+.search{margin-top:12px;background:#fff;border:0;border-radius:12px;padding:13px;width:100%;font-size:15px}
+nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #ddd;display:flex;justify-content:space-around;padding:8px;z-index:10}
+nav button{border:0;background:none;font-size:12px;color:#526057}nav button b{display:block;font-size:21px}
+main{padding:16px 16px 80px;max-width:900px;margin:auto}
+h2{margin:12px 0}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.card{background:#fff;border-radius:14px;padding:12px;box-shadow:0 2px 8px #00000010}
+.pic{height:120px;background:#e7eee9;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:45px}
+.price{font-weight:800;color:#0b8f55;margin:7px 0}.muted{color:#66736c;font-size:13px}
+button.action{background:#0b8f55;color:#fff;border:0;border-radius:9px;padding:10px 12px;width:100%;font-weight:700}
+button.secondary{background:#edf5f0;color:#0b8f55;border:0;border-radius:9px;padding:10px 12px}
+.row{display:flex;gap:8px;align-items:center}.row>*{flex:1}
+.panel{background:#fff;border-radius:14px;padding:15px;margin:12px 0}
+input,select,textarea{width:100%;padding:11px;border:1px solid #d5ddd8;border-radius:9px;margin:6px 0 10px}
+.badge{display:inline-block;background:#fff0d8;color:#925b00;padding:4px 8px;border-radius:20px;font-size:11px}
+.hide{display:none}.toast{position:fixed;left:50%;bottom:75px;transform:translateX(-50%);background:#17221c;color:#fff;padding:10px 15px;border-radius:20px;display:none;z-index:20}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">Lôgô</div><div class="tag">Achetez • Vendez • Livrez</div>
+  <input id="search" class="search" placeholder="Rechercher un produit, une boutique..." oninput="render()">
+</header>
+<main id="app"></main>
+<nav>
+<button onclick="page='home';render()"><b>⌂</b>Accueil</button>
+<button onclick="page='cats';render()"><b>☷</b>Catégories</button>
+<button onclick="page='cart';render()"><b>🛒</b>Panier</button>
+<button onclick="page='orders';render()"><b>📦</b>Commandes</button>
+<button onclick="page='account';render()"><b>👤</b>Compte</button>
+</nav>
+<div id="toast" class="toast"></div>
+<script>
+const products=[
+{id:1,name:"Smartphone Android",cat:"Téléphones",price:75000,shop:"Lôgô Mobile",icon:"📱"},
+{id:2,name:"Écouteurs Bluetooth",cat:"Accessoires",price:8500,shop:"Tech Shop",icon:"🎧"},
+{id:3,name:"Chaussures homme",cat:"Mode",price:15000,shop:"Boutique Faso",icon:"👟"},
+{id:4,name:"Sac à main",cat:"Mode",price:12000,shop:"Élégance",icon:"👜"},
+{id:5,name:"Panneau solaire",cat:"Maison",price:95000,shop:"Solar Faso",icon:"☀️"},
+{id:6,name:"Ventilateur",cat:"Maison",price:28000,shop:"Maison Plus",icon:"🌀"},
+{id:7,name:"Ordinateur portable",cat:"Informatique",price:225000,shop:"Digital Store",icon:"💻"},
+{id:8,name:"Montre connectée",cat:"Accessoires",price:18000,shop:"Smart Zone",icon:"⌚"}
+];
+let cart=JSON.parse(localStorage.cart||"[]"),orders=JSON.parse(localStorage.orders||"[]"),page="home",selected=null;
+const money=n=>new Intl.NumberFormat('fr-FR').format(n)+" F CFA";
+function toast(t){let x=document.getElementById('toast');x.textContent=t;x.style.display='block';setTimeout(()=>x.style.display='none',1800)}
+function add(id){cart.push(id);localStorage.cart=JSON.stringify(cart);toast("Produit ajouté au panier");render()}
+function remove(i){cart.splice(i,1);localStorage.cart=JSON.stringify(cart);render()}
+function render(){
+ const a=document.getElementById('app'),q=(document.getElementById('search')?.value||"").toLowerCase();
+ if(page==="home"){let ps=products.filter(p=>(p.name+p.cat+p.shop).toLowerCase().includes(q));a.innerHTML=`<h2>Bienvenue sur Lôgô 👋</h2><div class="panel"><b>Marketplace burkinabè</b><p class="muted">Achetez auprès de boutiques et vendeurs, puis suivez vos commandes.</p><span class="badge">Prototype fonctionnel</span></div><h2>Produits</h2><div class="grid">${ps.map(card).join("")}</div>`}
+ if(page==="cats"){let cs=[...new Set(products.map(p=>p.cat))];a.innerHTML="<h2>Catégories</h2>"+cs.map(c=>`<div class="panel" onclick="filterCat('${c}')">🛍️ <b>${c}</b></div>`).join("")}
+ if(page==="cart"){let ps=cart.map(id=>products.find(p=>p.id===id)).filter(Boolean);let total=ps.reduce((s,p)=>s+p.price,0);a.innerHTML=`<h2>Mon panier</h2>${ps.length?ps.map((p,i)=>`<div class="panel"><div class="row"><div>${p.icon} <b>${p.name}</b><br><span class="muted">${p.shop}</span></div><b>${money(p.price)}</b><button class="secondary" onclick="remove(${i})">×</button></div></div>`).join("")+`<div class="panel"><b>Total : ${money(total)}</b><br><br><button class="action" onclick="checkout()">Passer la commande</button></div>`:'<div class="panel">Votre panier est vide.</div>'}`}
+ if(page==="orders"){a.innerHTML="<h2>Mes commandes</h2>"+(orders.length?orders.map(o=>`<div class="panel"><b>Commande #${o.id}</b><br>${o.items.length} article(s)<br><b>${money(o.total)}</b><br><span class="badge">${o.status}</span></div>`).join(""):'<div class="panel">Aucune commande.</div>')}
+ if(page==="account"){a.innerHTML=`<h2>Mon compte</h2><div class="panel"><b>👤 Client Lôgô</b><p class="muted">Connectez-vous pour synchroniser vos commandes.</p><button class="action" onclick="login()">Se connecter</button></div><h2>Vendre sur Lôgô</h2><div class="panel"><p>Créez votre boutique et publiez vos produits.</p><button class="action" onclick="seller()">Mode vendeur</button></div>`}
+}
+function card(p){return `<div class="card"><div class="pic">${p.icon}</div><b>${p.name}</b><div class="muted">${p.shop}</div><div class="price">${money(p.price)}</div><button class="action" onclick="add(${p.id})">Ajouter au panier</button></div>`}
+function filterCat(c){document.getElementById('search').value=c;page='home';render()}
+function checkout(){if(!cart.length)return;page="checkout";document.getElementById('app').innerHTML=`<h2>Paiement</h2><div class="panel"><b>Mode de paiement</b><select id="pay"><option>Orange Money</option><option>Moov Money</option><option>Wave</option><option>Carte bancaire</option><option>Paiement à la livraison</option></select><input id="phone" placeholder="Numéro de téléphone"><button class="action" onclick="pay()">Confirmer la commande</button></div>`}
+function pay(){let ps=cart.map(id=>products.find(p=>p.id===id)).filter(Boolean),total=ps.reduce((s,p)=>s+p.price,0);orders.unshift({id:Date.now().toString().slice(-6),items:ps.map(p=>p.id),total,status:"En préparation",payment:document.getElementById('pay').value});localStorage.orders=JSON.stringify(orders);cart=[];localStorage.cart="[]";toast("Commande enregistrée");setTimeout(()=>{page='orders';render()},700)}
+function login(){toast("Connexion de démonstration")}
+function seller(){document.getElementById('app').innerHTML=`<h2>Espace vendeur</h2><div class="panel"><b>Créer une boutique</b><input placeholder="Nom de la boutique"><input placeholder="Téléphone"><button class="action" onclick="toast('Boutique créée en démonstration')">Créer ma boutique</button></div><div class="panel"><b>Ajouter un produit</b><input placeholder="Nom du produit"><input placeholder="Prix en F CFA" type="number"><textarea placeholder="Description"></textarea><button class="action" onclick="toast('Produit ajouté en démonstration')">Publier</button></div>`}
+render();
+</script>
+</body>
+</html>
