@@ -53,17 +53,29 @@ const supabaseClient = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
 );
-const products=[
+let products=[];
 
-{id:1,name:"Smartphone Android",cat:"Téléphones",price:75000,shop:"Lôgô Mobile",icon:"📱"},
-{id:2,name:"Écouteurs Bluetooth",cat:"Accessoires",price:8500,shop:"Tech Shop",icon:"🎧"},
-{id:3,name:"Chaussures homme",cat:"Mode",price:15000,shop:"Boutique Faso",icon:"👟"},
-{id:4,name:"Sac à main",cat:"Mode",price:12000,shop:"Élégance",icon:"👜"},
-{id:5,name:"Panneau solaire",cat:"Maison",price:95000,shop:"Solar Faso",icon:"☀️"},
-{id:6,name:"Ventilateur",cat:"Maison",price:28000,shop:"Maison Plus",icon:"🌀"},
-{id:7,name:"Ordinateur portable",cat:"Informatique",price:225000,shop:"Digital Store",icon:"💻"},
-{id:8,name:"Montre connectée",cat:"Accessoires",price:18000,shop:"Smart Zone",icon:"⌚"}
-];
+async function loadProducts(){
+  const {data,error}=await supabaseClient
+    .from("products")
+    .select("*");
+
+  if(error){
+    console.log(error);
+    return;
+  }
+
+  products=data.map(p=>({
+    id:p.id,
+    name:p.name,
+    cat:p.category,
+    price:Number(p.price),
+    shop:"Boutique Lôgô",
+    icon:"🛍️"
+  }));
+
+  loadProducts();
+  };
 let cart=JSON.parse(localStorage.cart||"[]"),orders=JSON.parse(localStorage.orders||"[]"),page="home",selected=null;
 const money=n=>new Intl.NumberFormat('fr-FR').format(n)+" F CFA";
 function toast(t){let x=document.getElementById('toast');x.textContent=t;x.style.display='block';setTimeout(()=>x.style.display='none',1800)}
