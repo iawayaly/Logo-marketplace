@@ -40,8 +40,17 @@ input,select,textarea{width:100%;padding:11px;border:1px solid #d5ddd8;border-ra
 <button onclick="page='account';render()"><b>👤</b>Compte</button>
 </nav>
 <div id="toast" class="toast"></div>
-<script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+const SUPABASE_URL = "https://brfjxzswvyutknmhkpmc.supabase.co";
+const SUPABASE_KEY ="sb_publishable__wNoydzqlNWFynuVE1o6XQ_bIYSCTVm";
+const supabase = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
 const products=[
+
 {id:1,name:"Smartphone Android",cat:"Téléphones",price:75000,shop:"Lôgô Mobile",icon:"📱"},
 {id:2,name:"Écouteurs Bluetooth",cat:"Accessoires",price:8500,shop:"Tech Shop",icon:"🎧"},
 {id:3,name:"Chaussures homme",cat:"Mode",price:15000,shop:"Boutique Faso",icon:"👟"},
