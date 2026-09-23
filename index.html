@@ -42,6 +42,10 @@ input,select,textarea{width:100%;padding:11px;border:1px solid #d5ddd8;border-ra
 <div id="toast" class="toast"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+  window.addEventListener("error", function(e){
+  document.getElementById("app").innerHTML =
+    '<div style="padding:20px;color:red;background:white;font-size:18px"><b>Erreur :</b><br>'+e.message+'</div>';
+});
 const SUPABASE_URL = "https://brfjxzswvyutknmhkpmc.supabase.co";
 const SUPABASE_KEY ="sb_publishable__wNoydzqlNWFynuVE1o6XQ_bIYSCTVm";
 const supabase = window.supabase.createClient(
