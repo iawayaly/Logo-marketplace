@@ -74,7 +74,7 @@ async function loadProducts(){
     icon:"🛍️"
   }));
 
-  loadProducts();
+  
   };
 let cart=JSON.parse(localStorage.cart||"[]"),orders=JSON.parse(localStorage.orders||"[]"),page="home",selected=null;
 const money=n=>new Intl.NumberFormat('fr-FR').format(n)+" F CFA";
@@ -95,7 +95,7 @@ function checkout(){if(!cart.length)return;page="checkout";document.getElementBy
 function pay(){let ps=cart.map(id=>products.find(p=>p.id===id)).filter(Boolean),total=ps.reduce((s,p)=>s+p.price,0);orders.unshift({id:Date.now().toString().slice(-6),items:ps.map(p=>p.id),total,status:"En préparation",payment:document.getElementById('pay').value});localStorage.orders=JSON.stringify(orders);cart=[];localStorage.cart="[]";toast("Commande enregistrée");setTimeout(()=>{page='orders';render()},700)}
 function login(){toast("Connexion de démonstration")}
 function seller(){document.getElementById('app').innerHTML=`<h2>Espace vendeur</h2><div class="panel"><b>Créer une boutique</b><input placeholder="Nom de la boutique"><input placeholder="Téléphone"><button class="action" onclick="toast('Boutique créée en démonstration')">Créer ma boutique</button></div><div class="panel"><b>Ajouter un produit</b><input placeholder="Nom du produit"><input placeholder="Prix en F CFA" type="number"><textarea placeholder="Description"></textarea><button class="action" onclick="toast('Produit ajouté en démonstration')">Publier</button></div>`}
-render();
+loadProducts();
 </script>
 </body>
 </html>
