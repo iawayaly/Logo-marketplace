@@ -98,6 +98,12 @@ function pay(){let ps=cart.map(id=>products.find(p=>p.id===id)).filter(Boolean),
 function login(){toast("Connexion de démonstration")}
 function seller(){document.getElementById('app').innerHTML=`<h2>Espace vendeur</h2><div class="panel"><b>Créer une boutique</b><input placeholder="Nom de la boutique"><input placeholder="Téléphone"><button class="action" onclick="toast('Boutique créée en démonstration')">Créer ma boutique</button></div><div class="panel"><b>Ajouter un produit</b><input placeholder="Nom du produit"><input placeholder="Prix en F CFA" type="number"><textarea placeholder="Description"></textarea><button class="action"onclick="publishProduct()">Publier</button></div>`}
 loadProducts();
+loadProducts();
+
+async function publishProduct() {
+  alert("Connexion du vendeur à préparer");
+}
+
 </script>
 </body>
 </html>
