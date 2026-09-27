@@ -112,6 +112,45 @@ async function publishProduct() {
   alert("Connexion du vendeur à préparer");
 }
 
-</script>
+async function signUp() {
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  if (!email || password.length < 8) {
+    alert("Saisis ton e-mail et un mot de passe d'au moins 8 caractères.");
+    return;
+  }
+
+  const { error } = await supabaseClient.auth.signUp({
+    email,
+    password,
+    options: {
+      emailRedirectTo: window.location.origin + window.location.pathname
+    }
+  });
+
+  if (error) {
+    alert("Erreur : " + error.message);
+  } else {
+    alert("Vérifie ta boîte e-mail pour confirmer ton inscription.");
+  }
+}
+
+async function signIn() {
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  const { error } = await supabaseClient.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) {
+    alert("Erreur : " + error.message);
+  } else {
+    alert("Connexion réussie !");
+    loadProducts();
+  }
+}</script>
 </body>
 </html>
