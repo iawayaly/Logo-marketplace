@@ -54,7 +54,24 @@ const supabaseClient = window.supabase.createClient(
   SUPABASE_KEY
 );
 let products=[];
+async function afficherCompte() {
+  const { data: { user }, error } = await supabaseClient.auth.getUser();
 
+  if (error || !user) {
+    page = "account";
+    render();
+    return;
+  }
+
+  document.getElementById("app").innerHTML = `
+    <h2>Mon compte</h2>
+    <div class="panel">
+      <b>👤 Utilisateur connecté</b>
+      <p>${user.email}</p>
+      <p class="muted">Connexion réussie à Lôgô.</p>
+      <button class="action" onclick="seller()">Mode vendeur</button>
+    </div>`;
+}
 async function loadProducts(){
   const {data,error}=await supabaseClient
     .from("products")
