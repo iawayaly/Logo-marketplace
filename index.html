@@ -87,7 +87,20 @@ function render(){
  if(page==="cats"){let cs=[...new Set(products.map(p=>p.cat))];a.innerHTML="<h2>Catégories</h2>"+cs.map(c=>`<div class="panel" onclick="filterCat('${c}')">🛍️ <b>${c}</b></div>`).join("")}
  if(page==="cart"){let ps=cart.map(id=>products.find(p=>p.id===id)).filter(Boolean);let total=ps.reduce((s,p)=>s+p.price,0);a.innerHTML=`<h2>Mon panier</h2>${ps.length?ps.map((p,i)=>`<div class="panel"><div class="row"><div>${p.icon} <b>${p.name}</b><br><span class="muted">${p.shop}</span></div><b>${money(p.price)}</b><button class="secondary" onclick="remove(${i})">×</button></div></div>`).join("")+`<div class="panel"><b>Total : ${money(total)}</b><br><br><button class="action" onclick="checkout()">Passer la commande</button></div>`:'<div class="panel">Votre panier est vide.</div>'}`}
  if(page==="orders"){a.innerHTML="<h2>Mes commandes</h2>"+(orders.length?orders.map(o=>`<div class="panel"><b>Commande #${o.id}</b><br>${o.items.length} article(s)<br><b>${money(o.total)}</b><br><span class="badge">${o.status}</span></div>`).join(""):'<div class="panel">Aucune commande.</div>')}
- if(page==="account"){a.innerHTML=`<h2>Mon compte</h2><div class="panel"><b>👤 Client Lôgô</b><p class="muted">Connectez-vous pour synchroniser vos commandes.</p><button class="action" onclick="login()">Se connecter</button></div><h2>Vendre sur Lôgô</h2><div class="panel"><p>Créez votre boutique et publiez vos produits.</p><button class="action" onclick="seller()">Mode vendeur</button></div>`}
+ if(page==="account"){
+  a.innerHTML=`<h2>Mon compte</h2>
+  <div class="panel">
+    <b>👤 Client Lôgô</b>
+    <p class="muted">Vérification de votre connexion...</p>
+    <button class="action" onclick="login()">Se connecter</button>
+  </div>
+  <h2>Vendre sur Lôgô</h2>
+  <div class="panel">
+    <p>Créez votre boutique et publiez vos produits.</p>
+    <button class="action" onclick="seller()">Mode vendeur</button>
+  </div>`;
+  }
+  {a.innerHTML=`<h2>Mon compte</h2><div class="panel"><b>👤 Client Lôgô</b><p class="muted">Connectez-vous pour synchroniser vos commandes.</p><button class="action" onclick="login()">Se connecter</button></div><h2>Vendre sur Lôgô</h2><div class="panel"><p>Créez votre boutique et publiez vos produits.</p><button class="action" onclick="seller()">Mode vendeur</button></div>`}
 }
 function card(p){return `<div class="card"><div class="pic">${p.icon}</div><b>${p.name}</b><div class="muted">${p.shop}</div><div class="price">${money(p.price)}</div><button class="action" onclick="add(${p.id})">Ajouter au panier</button></div>`}
 function filterCat(c){document.getElementById('search').value=c;page='home';render()}
