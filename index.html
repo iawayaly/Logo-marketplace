@@ -151,7 +151,41 @@ function login(){
     </div>
   `;
 }
-function seller(){document.getElementById('app').innerHTML=`<h2>Espace vendeur</h2><div class="panel"><b>Créer une boutique</b><input placeholder="Nom de la boutique"><input placeholder="Téléphone"><button class="action" onclick="toast('Boutique créée en démonstration')">Créer ma boutique</button></div><div class="panel"><b>Ajouter un produit</b><input placeholder="Nom du produit"><input placeholder="Prix en F CFA" type="number"><textarea placeholder="Description"></textarea><button class="action"onclick="publishProduct()">Publier</button></div>`}
+  
+function seller() {
+  document.getElementById("app").innerHTML = `
+    <h2>Espace vendeur</h2>
+    <div class="panel">
+      <b>Ajouter un produit</b>
+
+      <input id="productName" placeholder="Nom du produit">
+
+      <input id="productPrice" type="number" min="1"
+        placeholder="Prix en F CFA">
+
+      <select id="productCategory">
+        <option value="">Choisir une catégorie</option>
+        <option value="Téléphones">Téléphones</option>
+        <option value="Vêtements">Vêtements</option>
+        <option value="Alimentation">Alimentation</option>
+        <option value="Maison">Maison</option>
+        <option value="Électronique">Électronique</option>
+        <option value="Autres">Autres</option>
+      </select>
+
+      <textarea id="productDescription"
+        placeholder="Description du produit"></textarea>
+
+      <label for="productImage">Photo du produit</label>
+      <input id="productImage" type="file" accept="image/*">
+
+      <button class="action" onclick="publishProduct()">
+        Publier le produit
+      </button>
+    </div>
+  `;
+  }
+  
 loadProducts();
 
 
