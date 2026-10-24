@@ -55,23 +55,40 @@ const supabaseClient = window.supabase.createClient(
 );
 let products=[];
 async function afficherCompte() {
-  const { data: { user }, error } = await supabaseClient.auth.getUser();
+  const { data: { user }, error: authError } =
+    await supabaseClient.auth.getUser();
 
-  if (error || !user) {
+  if (authError || !user) {
+    alert("Veuillez vous connecter.");
     page = "account";
     render();
+    return;
+  }
+
+  const { data: profil, error } = await supabaseClient
+    .from("profiles")
+    .select("*")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  if (error) {
+    alert("Erreur du profil : " + error.message);
     return;
   }
 
   document.getElementById("app").innerHTML = `
     <h2>Mon compte</h2>
     <div class="panel">
-      <b>👤 Utilisateur connecté</b>
+      <b>👤 ${profil?.Full_name || "Utilisateur Lôgô"}</b>
       <p>${user.email}</p>
-      <p class="muted">Connexion réussie à Lôgô.</p>
+      <p>Téléphone : ${profil?.phone || "Non renseigné"}</p>
+      <p>Ville : ${profil?.city || "Non renseignée"}</p>
+      <p>Rôle : ${profil?.role || "client"}</p>
       <button class="action" onclick="seller()">Mode vendeur</button>
-    </div>`;
-}
+    </div>
+  `;
+    }
+  
 async function loadProducts(){
   const {data,error}=await supabaseClient
     .from("products")
