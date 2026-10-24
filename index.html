@@ -177,10 +177,9 @@ async function signIn() {
 
   if (error) {
     alert("Erreur : " + error.message);
-   } else {
+} else {
   alert("Connexion réussie !");
-  page = "account";
-  render();
+  await afficherCompte();
   }
 }</script>
 </body>
