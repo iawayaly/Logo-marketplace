@@ -189,9 +189,45 @@ function seller() {
 loadProducts();
 
 
+
 async function publishProduct() {
-  alert("Connexion du vendeur à préparer");
+  const name = document.getElementById("productName").value.trim();
+  const price = Number(document.getElementById("productPrice").value);
+  const category = document.getElementById("productCategory").value;
+  const description = document.getElementById("productDescription").value.trim();
+
+  if (!name || !price || price <= 0 || !category) {
+    alert("Remplis le nom, le prix et la catégorie du produit.");
+    return;
+  }
+
+  const { data: { user }, error: authError } =
+    await supabaseClient.auth.getUser();
+
+  if (authError || !user) {
+    alert("Connecte-toi avant de publier un produit.");
+    return;
+  }
+
+  const { error } = await supabaseClient
+    .from("products")
+    .insert([{
+      name: name,
+      price: price,
+      category: category,
+      description: description,
+      seller_id: user.id
+    }]);
+
+  if (error) {
+    alert("Erreur de publication : " + error.message);
+    return;
+  }
+
+  alert("Produit enregistré dans Lôgô !");
+  loadProducts();
 }
+  
 
 async function signUp() {
   const email = document.getElementById("email").value.trim();
